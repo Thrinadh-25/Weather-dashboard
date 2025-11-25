@@ -6,7 +6,7 @@ The aim of the project is to demonstrate understanding of full-stack development
 
 ---
 
-Features
+**Features**
 Authentication
 • User registration and login using JWT authentication.
 • Password hashing using bcrypt for security.
@@ -31,7 +31,7 @@ Backend
 
 ---
 
-Folder Structure
+**Folder Structure**
 Weather-dashboard/
 │
 ├── backend/
