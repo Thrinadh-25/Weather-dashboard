@@ -23,7 +23,7 @@ const Dashboard = () => {
       const res = await api.get('/favorites');
       setFavorites(res.data);
     } catch (err) {
-      console.error('Error fetching favorites');
+      console.error('Error fetching favorites', err);
     }
   };
 
@@ -48,22 +48,25 @@ const Dashboard = () => {
   };
 
   const addToFavorites = async () => {
-    if (weather && !favorites.includes(weather.name)) {
+    if (weather && !favorites.some(f => f.city === weather.city)) {
       try {
-        await api.post('/favorites', { city: weather.name });
+        await api.post('/favorites', {
+          city: weather.city,
+          country: weather.country || "IN"
+        });
         fetchFavorites();
       } catch (err) {
-        console.error('Error adding favorite');
+        console.error('Error adding favorite', err);
       }
     }
   };
 
-  const removeFavorite = async (cityName) => {
+  const removeFavorite = async (id) => {
     try {
-      await api.delete(`/favorites/${cityName}`);
+      await api.delete(`/favorites/${id}`);
       fetchFavorites();
     } catch (err) {
-      console.error('Error removing favorite');
+      console.error('Error removing favorite', err);
     }
   };
 
@@ -94,13 +97,15 @@ const Dashboard = () => {
         {weather && (
           <section className="weather-display">
             <div className="weather-card">
+
               <div className="weather-header">
-                <h2>{weather.name}</h2>
+                <h2>{weather.city}</h2>
                 <img 
                   src={`https://openweathermap.org/img/wn/${weather.icon}@2x.png`} 
-                  alt={weather.condition} 
+                  alt={weather.weather} 
                 />
               </div>
+
               <div className="weather-stats">
                 <div className="stat">
                   <FaTemperatureHigh />
@@ -112,27 +117,38 @@ const Dashboard = () => {
                 </div>
                 <div className="stat">
                   <FaWind />
-                  <span>{weather.condition}</span>
+                  <span>{weather.weather}</span>
                 </div>
               </div>
+
               <button onClick={addToFavorites} className="btn-favorite">
-                {favorites.includes(weather.name) ? 'Saved' : 'Add to Favorites'}
+                {favorites.some(f => f.city === weather.city) ? 'Saved' : 'Add to Favorites'}
               </button>
+
             </div>
           </section>
         )}
 
         <section className="favorites-section">
           <h3>Favorite Cities</h3>
+
           {favorites.length === 0 ? (
             <p className="empty-msg">No favorites yet.</p>
           ) : (
             <div className="favorites-grid">
               {favorites.map((fav) => (
-                <div key={fav} className="favorite-card" onClick={() => fetchWeather(fav)}>
-                  <span>{fav}</span>
+                <div 
+                  key={fav._id}
+                  className="favorite-card"
+                  onClick={() => fetchWeather(fav.city)}
+                >
+                  <span>{fav.city}</span>
+
                   <button 
-                    onClick={(e) => { e.stopPropagation(); removeFavorite(fav); }}
+                    onClick={(e) => { 
+                      e.stopPropagation(); 
+                      removeFavorite(fav._id); 
+                    }}
                     className="btn-delete"
                   >
                     <FaTrash />
@@ -141,6 +157,7 @@ const Dashboard = () => {
               ))}
             </div>
           )}
+
         </section>
       </main>
     </div>
