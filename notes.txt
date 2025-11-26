@@ -1,0 +1,2 @@
+Featuers to Add 
+1. add multiple weather api tokens , and code to use another if one fails and if all 5 fails , give a output of api server down \

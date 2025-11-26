@@ -22,6 +22,7 @@ const Register = () => {
 
   return (
     <div className="auth-container">
+      <h1 className="auth-title">WeatherDash</h1>
       <div className="auth-card">
         <h2>Create Account</h2>
         <p>Join us to track weather globally</p>

@@ -21,6 +21,7 @@ const Login = () => {
 
   return (
     <div className="auth-container">
+      <h1 className="auth-title">WeatherDash</h1>
       <div className="auth-card">
         <h2>Welcome Back</h2>
         <p>Login to your weather dashboard</p>
